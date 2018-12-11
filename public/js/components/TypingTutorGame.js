@@ -1,5 +1,6 @@
 import { fetchRandomQuote } from '../api-client.js';
 import TypingTutorView from './TypingTutorView.js';
+import { roundFloat } from '../math-util.js';
 
 class TypingTutorGame {
   constructor() {
@@ -26,6 +27,16 @@ class TypingTutorGame {
     this.currentStrokeCount += 1;
     const targetChar = this.targetText[this.currentStrokeCount];
     this.view.renderKeystroke(key, targetChar);
+    this.endJudge();
+  }
+
+  endJudge() {
+    if (this.targetText.length -1 === this.currentStrokeCount) {
+      const failedTyping = document.getElementsByClassName('key-incorrect').length;
+      const succeededTyping = document.getElementsByClassName('key-correct').length;
+      const successRate = roundFloat(succeededTyping / (failedTyping + succeededTyping), 2) * 100;
+      console.log(`正答率： ${successRate}%`);
+    }
   }
 
   initTargetText() {
